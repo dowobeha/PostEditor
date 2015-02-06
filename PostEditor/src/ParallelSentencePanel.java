@@ -22,33 +22,104 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class ParallelSentencePanel extends JPanel {
 
-	private final List<JLabel> sourceWords;
-	private final List<JLabel> targetWords;
+	private static enum Provenance {
+		Source,
+		Target,
+		Field,
+		Panel
+	}
+	
+	private class WordLabel extends JLabel {
+		
+		private final Provenance provenance;
+		private final int wordNumber;
+		
+		public WordLabel(Provenance provenance, String label, int wordNumber, PostEditor postEditor) {
+			super(label);
+			this.provenance = provenance;
+			this.wordNumber = wordNumber;
+			if (postEditor != null) {
+				this.addMouseListener(postEditor.listener);
+				this.addMouseMotionListener(postEditor.listener);
+				this.addKeyListener(postEditor.listener);
+			}
+		}
+		
+		public String toString() {
+			//return ""+this.provenance+" word " + this.wordNumber + " of parallel sentence " + ParallelSentencePanel.this.sentenceNumber + " of document " + ParallelSentencePanel.this.documentNumber;
+			return formatString(this.provenance, this.wordNumber, this.getText());
+		}
+	}
+	
+	private class EditField extends JTextField {
+		public EditField(PostEditor postEditor) {
+			super();
+			if (postEditor != null) {
+				this.addMouseListener(postEditor.listener);
+				this.addMouseMotionListener(postEditor.listener);
+				this.addKeyListener(postEditor.listener);
+			}
+		}
+		 
+		public String toString() {
+			return formatString(Provenance.Field, this.getCaretPosition(), this.getText());
+		}
+	}
+	
+	public String formatString(Provenance provenance) {
+		return formatString(provenance,null,"");
+	}
+	
+	public String formatString(Provenance provenance, Integer wordNumber, String text) {
+		return "" + this.documentNumber + "\t" + this.sentenceNumber + "\t" + provenance.toString() + "\t" + (wordNumber==null ? "" : wordNumber) + "\t" + text;
+	}
+	
+	private final List<WordLabel> sourceWords;
+	private final List<WordLabel> targetWords;
 	private final List<WordAlignment> wordAlignments;
 	
 	private final JPanel sourcePanel;
 	private final JPanel targetPanel;
 	
-	private final JTextField editableArea;
+	private final EditField editableArea;
+	
+	final int sentenceNumber;
+	final int documentNumber;
+	
+	public String toString() {
+		return formatString(Provenance.Panel);
+	}
 	
 	public ParallelSentencePanel(final ParallelSentence parallelSentence, final PostEditor postEditor) {
-		
-		this.sourceWords = new ArrayList<JLabel>();
-		this.targetWords = new ArrayList<JLabel>();
+		if (postEditor != null) {
+			this.addMouseListener(postEditor.listener);
+			this.addMouseMotionListener(postEditor.listener);
+			this.addKeyListener(postEditor.listener);
+			this.documentNumber = postEditor.getDocumentNumber();
+		} else {
+			this.documentNumber = -1;
+		}
+		if (parallelSentence != null) {
+			this.sentenceNumber = parallelSentence.sentenceNumber;
+		} else {
+			this.sentenceNumber = -1;
+		}
+		this.sourceWords = new ArrayList<WordLabel>();
+		this.targetWords = new ArrayList<WordLabel>();
 		this.wordAlignments = new ArrayList<WordAlignment>();
 		
 		this.sourcePanel = new JPanel();
 		this.targetPanel = new JPanel();
 		
-		this.editableArea = new JTextField();
+		this.editableArea = new EditField(postEditor);
 
-		for (String word : parallelSentence.sourceWords) {
-			this.sourceWords.add(new JLabel(word));
+		for (int index=0; index<parallelSentence.sourceWords.length; index+=1) {
+			this.sourceWords.add(new WordLabel(Provenance.Source, parallelSentence.sourceWords[index], index, postEditor));
 		}
 
 //		StringBuilder textToEdit = new StringBuilder();
-		for (String word : parallelSentence.targetWords) {
-			this.targetWords.add(new JLabel(word));
+		for (int index=0; index<parallelSentence.targetWords.length; index+=1) {
+			this.targetWords.add(new WordLabel(Provenance.Target, parallelSentence.targetWords[index], index, postEditor));
 //			textToEdit.append(word);
 //			textToEdit.append(" ");
 		}

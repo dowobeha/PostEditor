@@ -42,7 +42,6 @@ public class PostEditor {
 //	private final JSVGCanvas svgCanvas;
 
 
-	@SuppressWarnings("unused")
 	private Integer sentenceNumber = 0;
 	private Integer documentNumber;
 
@@ -64,11 +63,15 @@ public class PostEditor {
 	
 	private final JPanel parallelSentencesPanel;
 	
+	final ParallelSentencePanelListener listener;
+	
 //	private final Map<Integer,List<ParallelSentencePanel>> parallelSentencePanels;
 //	
 	@SuppressWarnings("serial")
 	public PostEditor(String postEditedPath, String sourcePath, String targetPath, String alignmentsPath, /*String svgListPath,*/ int startingDocumentNumber) throws FileNotFoundException {
 
+		this.listener = new ParallelSentencePanelListener();
+		
 		this.translatedDocuments = TranslatedDocument.collateTranslatedDocuments(postEditedPath, sourcePath, targetPath, alignmentsPath /*, svgListPath*/);
 //		System.err.println(this.translatedDocuments.size() + " documents");
 		
@@ -298,6 +301,14 @@ public class PostEditor {
 		
 	} 
 
+	int getDocumentNumber() {
+		return this.documentNumber;
+	}
+	
+	int getSentenceNumber() {
+		return this.sentenceNumber;
+	}
+	
 	void setSentenceNumber(int sentenceNumber) {
 		this.sentenceNumber = sentenceNumber;
 	}
@@ -393,19 +404,21 @@ public class PostEditor {
 */	
 	public static void main(String[] args) throws FileNotFoundException {
 
+		//System.err.println(args.length);
+		
 		if (args.length==0) {
 			JOptionPane.showMessageDialog(null,
     			"Please click OK, then select your data file");
     		
     		JFileChooser fileChooser = new JFileChooser();
     		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-    		System.out.println(fileChooser.getSelectedFile().getAbsolutePath());
+    			//System.out.println(fileChooser.getSelectedFile().getAbsolutePath());
   				new PostEditor(fileChooser.getSelectedFile().getAbsolutePath(), "data.ru", "data.en", "data.alignments", 1);
 			}
     		
 			
 		
-		} else if (args.length==5) {
+		} else if (args.length==4) {
 			
 			new PostEditor(args[0], args[1], args[2], args[3], 1);
 			

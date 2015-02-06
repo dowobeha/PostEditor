@@ -67,12 +67,15 @@ public class TranslatedDocument implements Iterable<ParallelSentence> {
 //		boolean flag = true;
 
 		Scanner postEditScanner = null;
-		Scanner sourceScanner = new Scanner(TranslatedDocument.class.getClass().getResourceAsStream("/data.ru"), "UTF-8");
-		Scanner targetScanner = new Scanner(TranslatedDocument.class.getClass().getResourceAsStream("/data.en"), "UTF-8");
-		Scanner alignmentsScanner = new Scanner(TranslatedDocument.class.getClass().getResourceAsStream("/data.alignments"), "UTF-8");
+		Scanner sourceScanner = null;
+		Scanner targetScanner = null;
+		Scanner alignmentsScanner = null;
 
 		try {
 			postEditScanner = new Scanner (new File(postEditedPath), "UTF-8");
+			sourceScanner = new Scanner (new File(sourcePath), "UTF-8");
+			targetScanner = new Scanner (new File(targetPath), "UTF-8");
+			alignmentsScanner = new Scanner (new File(alignmentsPath), "UTF-8");
 			
 //			Scanner svgListScanner = new Scanner(new File(svgListPath), "UTF-8");
 			

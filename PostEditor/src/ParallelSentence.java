@@ -30,7 +30,7 @@ public class ParallelSentence {
 	
 	public ParallelSentence setEditedTranslation(String editedTranslation) {
 		this.editedTranslation = editedTranslation;
-		System.err.println();
+		//System.err.println();
 		return this;
 	}
 	
