@@ -65,12 +65,15 @@ public class TranslatedDocument implements Iterable<ParallelSentence> {
 		
 		List<ParallelSentence> parallelSentences = new ArrayList<ParallelSentence>();
 //		boolean flag = true;
-		
+
+		Scanner postEditScanner = null;
+		Scanner sourceScanner = new Scanner(TranslatedDocument.class.getClass().getResourceAsStream("/data.ru"), "UTF-8");
+		Scanner targetScanner = new Scanner(TranslatedDocument.class.getClass().getResourceAsStream("/data.en"), "UTF-8");
+		Scanner alignmentsScanner = new Scanner(TranslatedDocument.class.getClass().getResourceAsStream("/data.alignments"), "UTF-8");
+
 		try {
-			Scanner postEditScanner = new Scanner (new File(postEditedPath), "UTF-8");
-			Scanner sourceScanner = new Scanner(TranslatedDocument.class.getClass().getResourceAsStream("/data.ru"), "UTF-8");
-			Scanner targetScanner = new Scanner(TranslatedDocument.class.getClass().getResourceAsStream("/data.en"), "UTF-8");
-			Scanner alignmentsScanner = new Scanner(TranslatedDocument.class.getClass().getResourceAsStream("/data.alignments"), "UTF-8");
+			postEditScanner = new Scanner (new File(postEditedPath), "UTF-8");
+			
 //			Scanner svgListScanner = new Scanner(new File(svgListPath), "UTF-8");
 			
 			while (postEditScanner.hasNextLine() && sourceScanner.hasNextLine() && targetScanner.hasNextLine() && alignmentsScanner.hasNextLine() ) {
@@ -111,6 +114,19 @@ public class TranslatedDocument implements Iterable<ParallelSentence> {
 		
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (postEditScanner != null) {
+				postEditScanner.close();
+			}
+			if (sourceScanner != null) {
+				sourceScanner.close();
+			}
+			if (targetScanner != null) {
+				targetScanner.close();
+			}
+			if (alignmentsScanner != null) {
+				alignmentsScanner.close();
+			}
 		}
 			
 		return list;

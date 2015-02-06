@@ -42,6 +42,7 @@ public class PostEditor {
 //	private final JSVGCanvas svgCanvas;
 
 
+	@SuppressWarnings("unused")
 	private Integer sentenceNumber = 0;
 	private Integer documentNumber;
 
