@@ -1,4 +1,6 @@
-import java.awt.event.InputEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -6,7 +8,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 
-public class ParallelSentencePanelListener implements MouseListener, MouseMotionListener, KeyListener {
+public class ParallelSentencePanelListener implements MouseListener, MouseMotionListener, KeyListener, FocusListener {
 
 	private long startTime = -1;
 	
@@ -16,7 +18,7 @@ public class ParallelSentencePanelListener implements MouseListener, MouseMotion
 		return elapsed;
 	}
 	
-	private void log(InputEvent e) {
+	private void log(ComponentEvent e) {
 		if (startTime < 0) {
 			startTime = System.currentTimeMillis();
 		}
@@ -79,6 +81,14 @@ public class ParallelSentencePanelListener implements MouseListener, MouseMotion
 				str.append(c);
 			}	
 			break;
+		case FocusEvent.FOCUS_GAINED:
+			str.append("FOCUS_GAINED");
+			str.append('\t');
+			break;
+		case FocusEvent.FOCUS_LOST:
+			str.append("FOCUS_LOST");
+			str.append('\t');
+			break;
 		default:
 			str.append("UNKNOWN");
 		}
@@ -99,14 +109,12 @@ public class ParallelSentencePanelListener implements MouseListener, MouseMotion
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		//log(e);
-		
+		log(e);		
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		log(e);
-		
+		log(e);		
 	}
 
 	@Override
@@ -123,14 +131,12 @@ public class ParallelSentencePanelListener implements MouseListener, MouseMotion
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		log(e);
-		
+		log(e);		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		log(e);
-		
+		log(e);		
 	}
 
 	@Override
@@ -145,6 +151,16 @@ public class ParallelSentencePanelListener implements MouseListener, MouseMotion
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		log(e);
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		log(e);		
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
 		log(e);
 	}
 

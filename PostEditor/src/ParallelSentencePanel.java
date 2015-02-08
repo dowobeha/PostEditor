@@ -1,8 +1,10 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -58,6 +60,7 @@ public class ParallelSentencePanel extends JPanel {
 				this.addMouseListener(postEditor.listener);
 				this.addMouseMotionListener(postEditor.listener);
 				this.addKeyListener(postEditor.listener);
+				this.addFocusListener(postEditor.listener);
 			}
 		}
 		 
@@ -219,6 +222,8 @@ public class ParallelSentencePanel extends JPanel {
 		super.paint(g);
 		g.setColor(Color.BLACK);
 
+		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
 		for (WordAlignment a : wordAlignments) {
 			
 //			System.err.println("Document " + documentNumber + ", sentence " + sentenceNumber + ", drawing alignment from source word " + a.sourceIndex + " to target word " + a.targetIndex);
