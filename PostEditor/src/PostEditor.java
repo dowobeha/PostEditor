@@ -8,14 +8,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.swing.BoxLayout;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -68,9 +67,9 @@ public class PostEditor {
 //	private final Map<Integer,List<ParallelSentencePanel>> parallelSentencePanels;
 //	
 	@SuppressWarnings("serial")
-	public PostEditor(String postEditedPath, String sourcePath, String targetPath, String alignmentsPath, /*String svgListPath,*/ int startingDocumentNumber) throws FileNotFoundException {
+	public PostEditor(String postEditedPath, String sourcePath, String targetPath, String alignmentsPath, String logPath, /*String svgListPath,*/ int startingDocumentNumber) throws UnsupportedEncodingException, IOException {
 
-		this.listener = new ParallelSentencePanelListener();
+		this.listener = new ParallelSentencePanelListener(logPath);
 		
 		this.translatedDocuments = TranslatedDocument.collateTranslatedDocuments(postEditedPath, sourcePath, targetPath, alignmentsPath /*, svgListPath*/);
 //		System.err.println(this.translatedDocuments.size() + " documents");
@@ -402,33 +401,34 @@ public class PostEditor {
 		return "file:" + this.translatedDocuments.get(documentNumber).get(sentenceNumber).svgPath;
 	}
 */	
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws UnsupportedEncodingException, IOException {
 
 		//System.err.println(args.length);
-		
-		if (args.length==0) {
-			JOptionPane.showMessageDialog(null,
-    			"Please click OK, then select your data file");
-    		
-    		JFileChooser fileChooser = new JFileChooser();
-    		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-    			//System.out.println(fileChooser.getSelectedFile().getAbsolutePath());
-  				new PostEditor(fileChooser.getSelectedFile().getAbsolutePath(), "data.ru", "data.en", "data.alignments", 1);
-			}
-    		
+//		
+//		if (args.length==0) {
+//			JOptionPane.showMessageDialog(null,
+//    			"Please click OK, then select your data file");
+//    		
+//    		JFileChooser fileChooser = new JFileChooser();
+//    		if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+//    			//System.out.println(fileChooser.getSelectedFile().getAbsolutePath());
+//  				new PostEditor(fileChooser.getSelectedFile().getAbsolutePath(), "data.ru", "data.en", "data.alignments", 1);
+//			}
+//    		
+//			
+//		
+//		} else 
+		if (args.length==5) {
 			
-		
-		} else if (args.length==4) {
+			new PostEditor(args[0], args[1], args[2], args[3], args[4], 1);
 			
-			new PostEditor(args[0], args[1], args[2], args[3], 1);
-			
-		} else if (args.length==6) {
-			
-			new PostEditor(args[0], args[1], args[2], args[3], Integer.valueOf(args[5]));
-			
+//		} else if (args.length==7) {
+//			
+//			new PostEditor(args[0], args[1], args[2], args[3], Integer.valueOf(args[5]));
+//			
 		} else {
 
-			System.err.println("Usage: PostEditor postEdit.txt source.txt mtOutput.txt alignments.txt (startingDocumentNumber)");
+			System.err.println("Usage: PostEditor postEdit.txt source.txt mtOutput.txt alignments.txt logFile.gz (startingDocumentNumber)");
 			
 //			final String postEditedPath = "/exp1/active/lane/2014-02-25_wmt14_postediting/newstest2014-ruen-src.ru.tokenized.translations.with_breaks.concatenated_transliterations.postedited";
 //			final String sourcePath = "/exp1/active/lane/2014-02-25_wmt14_postediting/newstest2014-ruen-src.ru.tokenized";

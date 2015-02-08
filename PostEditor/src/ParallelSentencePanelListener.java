@@ -6,22 +6,61 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipOutputStream;
 
 
 public class ParallelSentencePanelListener implements MouseListener, MouseMotionListener, KeyListener, FocusListener {
 
+	private final Writer writer;
+	
+	public ParallelSentencePanelListener(String fileName) throws UnsupportedEncodingException, IOException {
+		
+		final FileOutputStream output = new FileOutputStream(fileName);
+
+		if (fileName.endsWith(".gz")) {
+			writer = new OutputStreamWriter(new GZIPOutputStream(output), "UTF-8");
+		} else if (fileName.endsWith(".zip")) {
+			writer = new OutputStreamWriter(new ZipOutputStream(output), "UTF-8");
+		} else {
+			writer = new OutputStreamWriter(output, "UTF-8");
+		}
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				try {
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				try {
+					output.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
 	private long startTime = -1;
 	
 	private long elapsedMilliseconds() {
+		
+		if (startTime < 0) {
+			startTime = System.currentTimeMillis();
+		}
+		
 		long now = System.currentTimeMillis();
 		long elapsed = now - startTime;
 		return elapsed;
 	}
 	
 	private void log(ComponentEvent e) {
-		if (startTime < 0) {
-			startTime = System.currentTimeMillis();
-		}
 		
 		StringBuilder str = new StringBuilder();
 		
@@ -97,14 +136,20 @@ public class ParallelSentencePanelListener implements MouseListener, MouseMotion
 		 
 		str.append(e.getSource().toString());
 		
-		System.err.println(str.toString());
-		//System.err.println(elapsedMilliseconds() + "\t" + e.getSource().toString() + "\t" + e.paramString());
+		str.append('\n');
+		
+		try {
+			writer.append(str.toString());
+		} catch (IOException exception) {
+			exception.printStackTrace();
+			System.err.println(str.toString());
+		}
+
 	}
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		log(e);
-		
 	}
 
 	@Override
@@ -119,14 +164,12 @@ public class ParallelSentencePanelListener implements MouseListener, MouseMotion
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		log(e);
-		
+		log(e);	
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		log(e);
-		
+		log(e);	
 	}
 
 	@Override
