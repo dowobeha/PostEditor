@@ -23,13 +23,6 @@ import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class ParallelSentencePanel extends JPanel {
-
-	private static enum Provenance {
-		Source,
-		Target,
-		Field,
-		Panel
-	}
 	
 	private class WordLabel extends JLabel {
 		

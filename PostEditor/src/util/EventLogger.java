@@ -1,4 +1,5 @@
 package util;
+
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -7,6 +8,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -16,7 +19,7 @@ import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipOutputStream;
 
 
-public class EventLogger implements MouseListener, MouseMotionListener, KeyListener, FocusListener {
+public class EventLogger implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, FocusListener {
 
 	private final Writer writer;
 	
@@ -133,8 +136,17 @@ public class EventLogger implements MouseListener, MouseMotionListener, KeyListe
 			str.append("UNKNOWN");
 		}
 		
+//		
+//		str.append('\t');
+//		str.append("XXX");
+//		
 		str.append('\t');
-		 
+		str.append(e.paramString().replaceFirst("\t.*", ""));
+//
+//		str.append('\t');
+//		str.append("YYY");
+		
+		str.append('\t');	 
 		str.append(e.getSource().toString());
 		
 		str.append('\n');
@@ -184,6 +196,11 @@ public class EventLogger implements MouseListener, MouseMotionListener, KeyListe
 	}
 
 	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		log(e);
+	}
+	
+	@Override
 	public void keyTyped(KeyEvent e) {
 		log(e);
 	}
@@ -207,5 +224,7 @@ public class EventLogger implements MouseListener, MouseMotionListener, KeyListe
 	public void focusLost(FocusEvent e) {
 		log(e);
 	}
+
+
 
 }

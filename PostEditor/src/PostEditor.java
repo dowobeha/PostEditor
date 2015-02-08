@@ -266,7 +266,12 @@ public class PostEditor {
 		this.parallelSentencesPanel = new ParallelSentencesPanel();
 //		this.parallelSentencesPanel = new JPanel();
 		this.parallelSentencesPanel.setLayout(new BoxLayout(this.parallelSentencesPanel, BoxLayout.PAGE_AXIS));
-		JScrollPane parallelSentencesScrollPane = new JScrollPane(parallelSentencesPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane parallelSentencesScrollPane = new JScrollPane(parallelSentencesPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+			public String toString() {
+				return "" + documentNumber + "\t" + "\t" + Provenance.Window.toString() + "\t" +  "\t";
+			}
+		};
+		parallelSentencesScrollPane.addMouseWheelListener(listener);
 		parallelSentencesScrollPane.setLayout(new ScrollPaneLayout(){
 			public void layoutContainer(Container parent) {
 				super.layoutContainer(parent);
