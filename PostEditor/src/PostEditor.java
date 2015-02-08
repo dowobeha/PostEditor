@@ -25,6 +25,8 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneLayout;
 
+import util.EventLogger;
+
 //import org.apache.batik.swing.JSVGCanvas;
 
 public class PostEditor {
@@ -62,14 +64,14 @@ public class PostEditor {
 	
 	private final JPanel parallelSentencesPanel;
 	
-	final ParallelSentencePanelListener listener;
+	final EventLogger listener;
 	
 //	private final Map<Integer,List<ParallelSentencePanel>> parallelSentencePanels;
 //	
 	@SuppressWarnings("serial")
 	public PostEditor(String postEditedPath, String sourcePath, String targetPath, String alignmentsPath, String logPath, /*String svgListPath,*/ int startingDocumentNumber) throws UnsupportedEncodingException, IOException {
 
-		this.listener = new ParallelSentencePanelListener(logPath);
+		this.listener = new EventLogger(logPath);
 		
 		this.translatedDocuments = TranslatedDocument.collateTranslatedDocuments(postEditedPath, sourcePath, targetPath, alignmentsPath /*, svgListPath*/);
 //		System.err.println(this.translatedDocuments.size() + " documents");
