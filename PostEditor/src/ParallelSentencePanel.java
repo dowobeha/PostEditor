@@ -42,7 +42,7 @@ public class ParallelSentencePanel extends JPanel {
 		
 		public String toString() {
 			//return ""+this.provenance+" word " + this.wordNumber + " of parallel sentence " + ParallelSentencePanel.this.sentenceNumber + " of document " + ParallelSentencePanel.this.documentNumber;
-			return formatString(this.provenance, this.wordNumber, this.getText());
+			return formatString(this.provenance, Integer.toString(this.wordNumber), this.getText());
 		}
 	}
 	
@@ -58,7 +58,8 @@ public class ParallelSentencePanel extends JPanel {
 		}
 		 
 		public String toString() {
-			return formatString(Provenance.Field, this.getCaretPosition(), this.getText());
+			String wordNumber = (this.getSelectedText()==null) ? Integer.toString(this.getCaretPosition()) : Integer.toString(this.getSelectionStart())+"-"+Integer.toString(this.getSelectionEnd());
+			return formatString(Provenance.Field, wordNumber, this.getText());
 		}
 	}
 	
@@ -66,7 +67,7 @@ public class ParallelSentencePanel extends JPanel {
 		return formatString(provenance,null,"");
 	}
 	
-	public String formatString(Provenance provenance, Integer wordNumber, String text) {
+	public String formatString(Provenance provenance, String wordNumber, String text) {
 		return "" + this.documentNumber + "\t" + this.sentenceNumber + "\t" + provenance.toString() + "\t" + (wordNumber==null ? "" : wordNumber) + "\t" + text;
 	}
 	
